@@ -20,7 +20,6 @@ def show_board_info(snakes, ladders):
 
 def print_board(player1_pos, player2_pos, snakes, ladders, p1_name, p2_name):
     """Display a visual 10x10 Snake and Ladder board with colored player symbols."""
-
     GREEN = "\033[92m"
     RED = "\033[91m"
     RESET = "\033[0m"
@@ -121,13 +120,20 @@ def get_player_names():
 
 
 def ask_replay():
-    """Ask the user if they want to play again."""
+    """
+    Ask the user if they want to play again.
+
+    Pressing Enter with no input will be treated as 'no' so the game exits cleanly.
+    """
     while True:
         choice = input("Do you want to play again? (yes/no): ").strip().lower()
+
+        if choice == "" or choice == "no" or choice == "n":
+            return False
+
         if choice == "yes" or choice == "y":
             return True
-        if choice == "no" or choice == "n":
-            return False
+
         print("Invalid input. Please enter yes or no.")
 
 
@@ -161,21 +167,52 @@ def play_game(player1_name, player2_name):
     show_board_info(snakes, ladders)
 
     while True:
-        print_board(player1_position, player2_position, snakes, ladders, player1_name, player2_name)
+        print_board(
+            player1_position,
+            player2_position,
+            snakes,
+            ladders,
+            player1_name,
+            player2_name
+        )
         print(f"{player1_name}: {player1_position} | {player2_name}: {player2_position}")
         print("-" * 30)
 
         if current_player == 1:
-            player1_position = move_player(player1_name, player1_position, snakes, ladders)
+            player1_position = move_player(
+                player1_name,
+                player1_position,
+                snakes,
+                ladders
+            )
             if player1_position == 100:
-                print_board(player1_position, player2_position, snakes, ladders, player1_name, player2_name)
+                print_board(
+                    player1_position,
+                    player2_position,
+                    snakes,
+                    ladders,
+                    player1_name,
+                    player2_name
+                )
                 print(f"Congratulations! {player1_name} wins this round!\n")
                 return player1_name
             current_player = 2
         else:
-            player2_position = move_player(player2_name, player2_position, snakes, ladders)
+            player2_position = move_player(
+                player2_name,
+                player2_position,
+                snakes,
+                ladders
+            )
             if player2_position == 100:
-                print_board(player1_position, player2_position, snakes, ladders, player1_name, player2_name)
+                print_board(
+                    player1_position,
+                    player2_position,
+                    snakes,
+                    ladders,
+                    player1_name,
+                    player2_name
+                )
                 print(f"Congratulations! {player2_name} wins this round!\n")
                 return player2_name
             current_player = 1
@@ -200,14 +237,16 @@ def main():
         print("==================\n")
 
         if not ask_replay():
-            print("\nFinal Scores:")
-            for player, wins in scores.items():
-                print(f"{player}: {wins} wins")
-            print("\nThanks for playing Snake & Ladder!")
             break
+
         print()
+
+    print("\nFinal Scores:")
+    for player, wins in scores.items():
+        print(f"{player}: {wins} wins")
+
+    print("\nThanks for playing Snake & Ladder!")
 
 
 if __name__ == "__main__":
     main()
-    
